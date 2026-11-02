@@ -1,0 +1,27 @@
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+**/*.rs.bk
+
+# Node (仅用于打包，前端本身无构建步骤)
+node_modules/
+npm-debug.log*
+
+# Python 旧版构建产物
+build/
+dist/
+__pycache__/
+*.py[cod]
+*.spec.bak
+
+# 日志与本地配置
+*.log
+.env
+.env.local
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

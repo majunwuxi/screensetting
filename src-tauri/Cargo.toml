@@ -1,0 +1,46 @@
+[package]
+name = "wallpaper-studio"
+version = "2.0.0"
+description = "Wallpaper Studio — 桌面壁纸与锁屏图像工作台"
+authors = ["Wuxi Wellmax Trading Co., Ltd."]
+edition = "2021"
+rust-version = "1.80"
+
+[lib]
+name = "wallpaper_studio_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.12", default-features = false, features = ["json", "native-tls"] }
+image = { version = "0.25", default-features = false, features = [
+    "jpeg",
+    "png",
+    "webp",
+    "bmp",
+    "gif",
+    "tiff",
+] }
+winreg = "0.52"
+windows-sys = { version = "0.60", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Shell",
+    "Win32_Graphics_Gdi",
+] }
+base64 = "0.22"
+chrono = { version = "0.4", features = ["serde"] }
+rfd = "0.15"
+log = "0.4"
+env_logger = "0.11"
+
+[profile.release]
+codegen-units = 16
+lto = "thin"
+opt-level = "s"
+strip = true

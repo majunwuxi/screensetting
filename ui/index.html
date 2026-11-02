@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wallpaper Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      // 静态预览：?static=1 时在首帧前关闭动画，便于截图与自动化检查。
+      if (new URLSearchParams(location.search).get("static") === "1") {
+        document.documentElement.classList.add("qa-static");
+      }
+    </script>
+  </head>
+  <body>
+    <svg class="sprite" aria-hidden="true">
+      <symbol id="i-sparkles" viewBox="0 0 24 24">
+        <path d="M12 3.2l1.7 4.6 4.6 1.7-4.6 1.7L12 15.8l-1.7-4.6L5.7 9.5l4.6-1.7z" />
+        <path d="M18.6 15.4l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" />
+      </symbol>
+      <symbol id="i-compass" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="m15.6 8.4-2.2 5-5 2.2 2.2-5z" />
+      </symbol>
+      <symbol id="i-image" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="3.2" />
+        <circle cx="8.8" cy="8.8" r="1.7" />
+        <path d="m20.6 15.2-4.4-4.4L7 20" />
+      </symbol>
+      <symbol id="i-layers" viewBox="0 0 24 24">
+        <path d="m12 3 9 5-9 5-9-5 9-5Z" />
+        <path d="m3.4 12.6 8.6 4.8 8.6-4.8" />
+        <path d="m3.4 16.8 8.6 4.8 8.6-4.8" />
+      </symbol>
+      <symbol id="i-settings" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="3" />
+        <path d="M19.4 14.6a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.56-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9.1a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9.1a1.7 1.7 0 0 0 1.56 1.03H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1.47Z" />
+      </symbol>
+      <symbol id="i-search" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20.2 20.2-3.3-3.3" />
+      </symbol>
+      <symbol id="i-monitor" viewBox="0 0 24 24">
+        <rect x="2.5" y="4" width="19" height="13" rx="2.6" />
+        <path d="M8.5 21h7M12 17v4" />
+      </symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24">
+        <rect x="4" y="10.4" width="16" height="10.6" rx="2.6" />
+        <path d="M8 10.4V7.8a4 4 0 0 1 8 0v2.6" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="m4.5 12.6 5 5 10-11" />
+      </symbol>
+      <symbol id="i-x" viewBox="0 0 24 24">
+        <path d="m6 6 12 12M18 6 6 18" />
+      </symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24">
+        <path d="M5 12h14" />
+      </symbol>
+      <symbol id="i-square" viewBox="0 0 24 24">
+        <rect x="5" y="5" width="14" height="14" rx="2" />
+      </symbol>
+      <symbol id="i-restore" viewBox="0 0 24 24">
+        <rect x="4" y="7" width="12" height="12" rx="2" />
+        <path d="M8 4h10a2 2 0 0 1 2 2v10" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M4 7h16M9.5 7V4.8h5V7" />
+        <path d="m6.5 7 .8 12.1a2 2 0 0 0 2 1.9h5.4a2 2 0 0 0 2-1.9L17.5 7" />
+      </symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M20 11a8 8 0 1 0-2.2 5.6" />
+        <path d="M20 5v6h-6" />
+      </symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24">
+        <path d="M12 3l7.5 3v5.6c0 4.6-3.1 7.9-7.5 9.4-4.4-1.5-7.5-4.8-7.5-9.4V6z" />
+        <path d="m8.8 12 2.2 2.2 4.2-4.4" />
+      </symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24">
+        <path d="M3 7.6A2.6 2.6 0 0 1 5.6 5h4.2L12 7.4h6.4A2.6 2.6 0 0 1 21 10v7.4a2.6 2.6 0 0 1-2.6 2.6H5.6A2.6 2.6 0 0 1 3 17.4z" />
+      </symbol>
+      <symbol id="i-external" viewBox="0 0 24 24">
+        <path d="M14 4h6v6M20 4l-8.5 8.5" />
+        <path d="M18 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5" />
+      </symbol>
+      <symbol id="i-download" viewBox="0 0 24 24">
+        <path d="M12 4v10.4M7.5 10.9 12 15.4l4.5-4.5" />
+        <path d="M4.5 18.6h15" />
+      </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12h14" />
+      </symbol>
+      <symbol id="i-clock" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M12 7.4V12l3 1.9" />
+      </symbol>
+      <symbol id="i-arrow-right" viewBox="0 0 24 24">
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </symbol>
+      <symbol id="i-info" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 11v6M12 7.6v.1" />
+      </symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24">
+        <path d="M4 8h9M18 8h2M4 16h4M13 16h7" />
+        <circle cx="15.5" cy="8" r="2.2" />
+        <circle cx="10" cy="16" r="2.2" />
+      </symbol>
+      <symbol id="i-image-off" viewBox="0 0 24 24">
+        <path d="M4 4l16 16" />
+        <path d="M20.4 15.2 16 10.8 12.8 14M3.6 8.4A3 3 0 0 0 3 10v8a3 3 0 0 0 3 3h11.6" />
+        <path d="M9 3h9a3 3 0 0 1 3 3v9" />
+      </symbol>
+    </svg>
+
+    <div class="ambient" aria-hidden="true">
+      <span class="blob blob-a"></span>
+      <span class="blob blob-b"></span>
+      <span class="blob blob-c"></span>
+      <span class="grain"></span>
+    </div>
+
+    <div class="titlebar" data-tauri-drag-region>
+      <div class="titlebar-name" data-tauri-drag-region>Wallpaper Studio</div>
+      <div class="window-controls">
+        <button class="win-btn" id="winMin" title="最小化">
+          <svg class="ic"><use href="#i-minus" /></svg>
+        </button>
+        <button class="win-btn" id="winMax" title="最大化">
+          <svg class="ic"><use href="#i-square" /></svg>
+        </button>
+        <button class="win-btn win-close" id="winClose" title="关闭">
+          <svg class="ic"><use href="#i-x" /></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">
+            <svg class="ic"><use href="#i-sparkles" /></svg>
+          </div>
+          <div class="brand-text">
+            <strong>Wallpaper</strong>
+            <span>STUDIO</span>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item is-active" data-page="explore">
+            <svg class="ic"><use href="#i-compass" /></svg>
+            <span>探索发现</span>
+          </button>
+          <button class="nav-item" data-page="local">
+            <svg class="ic"><use href="#i-image" /></svg>
+            <span>本地图片</span>
+          </button>
+          <button class="nav-item" data-page="library">
+            <svg class="ic"><use href="#i-layers" /></svg>
+            <span>应用记录</span>
+            <em class="nav-count" id="navCount">0</em>
+          </button>
+          <button class="nav-item" data-page="settings">
+            <svg class="ic"><use href="#i-settings" /></svg>
+            <span>偏好设置</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-spacer"></div>
+
+        <div class="permission-card" id="permissionCard">
+          <div class="permission-head">
+            <svg class="ic"><use href="#i-shield" /></svg>
+            <span id="permissionTitle">正在检测权限…</span>
+          </div>
+          <p id="permissionText">锁屏图像需要管理员权限才能写入系统。</p>
+          <button class="btn btn-soft sm" id="elevateBtn">以管理员身份重启</button>
+        </div>
+
+        <div class="sidebar-foot">
+          <span class="dot-live"></span>
+          <span id="versionText">v2.0.0</span>
+          <span class="sep">·</span>
+          <span>Rust / Tauri</span>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="scroll" id="scroll">
+          <!-- 探索 -->
+          <section class="view is-active" data-view="explore">
+            <header class="page-head">
+              <div>
+                <p class="eyebrow">EXPLORE · UNSPLASH</p>
+                <h1>让屏幕，成为一扇窗</h1>
+                <p class="lede">
+                  搜索全球摄影师的作品，或导入你自己的照片。渲染引擎会自动裁切到屏幕比例，桌面与锁屏都严丝合缝。
+                </p>
+              </div>
+              <div class="head-badges">
+                <span class="pill" id="screenPill">
+                  <svg class="ic"><use href="#i-monitor" /></svg>
+                  <span>—</span>
+                </span>
+                <span class="pill pill-quiet" id="renderPill">满屏渲染</span>
+              </div>
+            </header>
+
+            <div class="search-shell">
+              <svg class="ic search-ic"><use href="#i-search" /></svg>
+              <input
+                id="searchInput"
+                type="text"
+                placeholder="搜索「极光」「山脉」「城市夜景」「极简建筑」…"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <span class="key-hint">Enter</span>
+              <button class="btn btn-primary" id="searchBtn">
+                <span>搜索</span>
+                <svg class="ic"><use href="#i-arrow-right" /></svg>
+              </button>
+            </div>
+
+            <div class="chip-row" id="chipRow">
+              <button class="chip is-active" data-query="nature landscape">自然</button>
+              <button class="chip" data-query="mountain">山脉</button>
+              <button class="chip" data-query="ocean">海洋</button>
+              <button class="chip" data-query="city night">城市夜景</button>
+              <button class="chip" data-query="aurora">极光</button>
+              <button class="chip" data-query="minimal architecture">极简建筑</button>
+              <button class="chip" data-query="abstract gradient">抽象渐变</button>
+            </div>
+
+            <div class="section-head">
+              <h2 id="resultsTitle">精选摄影</h2>
+              <span class="section-meta" id="resultsMeta">准备就绪</span>
+            </div>
+
+            <div class="grid" id="resultsGrid"></div>
+
+            <div class="center-row" id="loadMoreWrap" hidden>
+              <button class="btn btn-ghost" id="loadMoreBtn">
+                <svg class="ic"><use href="#i-plus" /></svg>
+                加载更多
+              </button>
+            </div>
+          </section>
+
+          <!-- 本地图片 -->
+          <section class="view" data-view="local">
+            <header class="page-head">
+              <div>
+                <p class="eyebrow">LOCAL · LIBRARY</p>
+                <h1>用你自己的照片</h1>
+                <p class="lede">
+                  把本地图片拖进窗口，或从磁盘选择。程序会生成与原图同源的高质量满屏成图，桌面与锁屏都能用。
+                </p>
+              </div>
+              <div class="head-badges">
+                <span class="pill" id="localScreenPill">
+                  <svg class="ic"><use href="#i-monitor" /></svg>
+                  <span>—</span>
+                </span>
+              </div>
+            </header>
+
+            <div class="local-layout">
+              <div class="dropzone" id="dropzone">
+                <div class="drop-icon">
+                  <svg class="ic"><use href="#i-image" /></svg>
+                </div>
+                <h3>把图片拖到这里</h3>
+                <p>JPG · PNG · WEBP · BMP · GIF · TIFF，最大 160 MB</p>
+                <button class="btn btn-primary" id="pickLocalBtn">
+                  <svg class="ic"><use href="#i-folder" /></svg>
+                  选择本地图片
+                </button>
+                <span class="drop-note">快捷键 Ctrl + O</span>
+              </div>
+
+              <aside class="tips">
+                <div class="tip-row">
+                  <span class="tip-num">01</span>
+                  <div>
+                    <strong>满屏裁切</strong>
+                    <p>按显示器比例居中裁切，绝不出现黑边或拉伸。</p>
+                  </div>
+                </div>
+                <div class="tip-row">
+                  <span class="tip-num">02</span>
+                  <div>
+                    <strong>锁屏同源</strong>
+                    <p>同一张成图可同时用于桌面与锁屏，风格统一。</p>
+                  </div>
+                </div>
+                <div class="tip-row">
+                  <span class="tip-num">03</span>
+                  <div>
+                    <strong>原始文件不动</strong>
+                    <p>程序只写入自己的图库，不修改你的原始照片。</p>
+                  </div>
+                </div>
+              </aside>
+            </div>
+
+            <div class="section-head">
+              <h2>最近导入</h2>
+              <span class="section-meta" id="localMeta">暂无记录</span>
+            </div>
+            <div class="grid grid-compact" id="localGrid"></div>
+          </section>
+
+          <!-- 应用记录 -->
+          <section class="view" data-view="library">
+            <header class="page-head">
+              <div>
+                <p class="eyebrow">LIBRARY · HISTORY</p>
+                <h1>应用记录</h1>
+                <p class="lede">每次应用都会保留屏幕尺寸成图，可以随时重新应用到桌面或锁屏。</p>
+              </div>
+              <div class="head-actions">
+                <button class="btn btn-ghost" id="refreshHistory">
+                  <svg class="ic"><use href="#i-refresh" /></svg>
+                  刷新
+                </button>
+                <button class="btn btn-ghost" id="openLibrary">
+                  <svg class="ic"><use href="#i-folder" /></svg>
+                  打开图库
+                </button>
+              </div>
+            </header>
+
+            <div class="history-list" id="historyList"></div>
+          </section>
+
+          <!-- 设置 -->
+          <section class="view" data-view="settings">
+            <header class="page-head">
+              <div>
+                <p class="eyebrow">SETTINGS</p>
+                <h1>偏好设置</h1>
+                <p class="lede">接入密钥、输出画质、系统权限与本地存储，都集中在这里。</p>
+              </div>
+            </header>
+
+            <div class="settings-grid">
+              <section class="card">
+                <div class="card-head">
+                  <div>
+                    <h3>Unsplash 接入</h3>
+                    <p class="card-sub">用于搜索高清摄影作品，密钥只保存在本机。</p>
+                  </div>
+                  <span class="badge" id="apiBadge">Client-ID</span>
+                </div>
+                <label class="field">
+                  <span>Access Key</span>
+                  <div class="input-row">
+                    <input id="keyInput" type="password" autocomplete="off" spellcheck="false" />
+                    <button class="btn btn-ghost sm" id="toggleKey">显示</button>
+                  </div>
+                </label>
+                <p class="help">可在 unsplash.com/developers 免费申请。留空将恢复内置密钥。</p>
+                <div class="key-facts">
+                  <div>
+                    <svg class="ic"><use href="#i-search" /></svg>
+                    <span>搜索</span>
+                    <em>实时检索 Unsplash 图库</em>
+                  </div>
+                  <div>
+                    <svg class="ic"><use href="#i-download" /></svg>
+                    <span>下载</span>
+                    <em>原图保存到本地图库</em>
+                  </div>
+                  <div>
+                    <svg class="ic"><use href="#i-shield" /></svg>
+                    <span>隐私</span>
+                    <em>密钥只写入本机配置文件</em>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card">
+                <div class="card-head">
+                  <div>
+                    <h3>输出与画质</h3>
+                    <p class="card-sub">成图会按当前屏幕分辨率渲染。</p>
+                  </div>
+                  <svg class="ic card-ic"><use href="#i-sliders" /></svg>
+                </div>
+                <label class="field">
+                  <span>默认显示方式</span>
+                  <select id="fitSelect">
+                    <option value="cover">填充 · 满屏裁切</option>
+                    <option value="blur">氛围 · 模糊背景 + 完整主体</option>
+                    <option value="contain">适应 · 完整显示</option>
+                    <option value="stretch">拉伸 · 强适配</option>
+                    <option value="center">居中 · 原比例</option>
+                    <option value="tile">平铺 · 重复纹理</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>JPEG 画质 <b id="qualityValue">92</b></span>
+                  <input id="qualityRange" type="range" min="70" max="100" step="1" />
+                </label>
+                <div class="switch-row">
+                  <div>
+                    <strong>默认同时设置锁屏</strong>
+                    <p>打开预览面板时默认勾选锁屏目标。</p>
+                  </div>
+                  <label class="switch">
+                    <input id="switchLockscreen" type="checkbox" />
+                    <span></span>
+                  </label>
+                </div>
+                <div class="switch-row">
+                  <div>
+                    <strong>保留历史成图</strong>
+                    <p>最多保留 60 张，可随时重新应用。</p>
+                  </div>
+                  <label class="switch">
+                    <input id="switchKeep" type="checkbox" />
+                    <span></span>
+                  </label>
+                </div>
+              </section>
+
+              <section class="card">
+                <div class="card-head">
+                  <div>
+                    <h3>保存位置</h3>
+                    <p class="card-sub">Unsplash 原图与渲染成图会存放于此。</p>
+                  </div>
+                  <svg class="ic card-ic"><use href="#i-folder" /></svg>
+                </div>
+                <label class="field">
+                  <span>下载目录</span>
+                  <div class="input-row">
+                    <input id="downloadDirInput" type="text" readonly />
+                    <button class="btn btn-ghost sm" id="chooseDirBtn">选择</button>
+                  </div>
+                </label>
+                <div class="stat-row">
+                  <div><span>图库文件</span><strong id="libraryCount">0</strong></div>
+                  <div><span>缓存占用</span><strong id="cacheSize">0 MB</strong></div>
+                  <div><span>显示器</span><strong id="monitorInfo">—</strong></div>
+                </div>
+                <div class="inline-actions">
+                  <button class="btn btn-ghost sm" id="openDirBtn">打开目录</button>
+                  <button class="btn btn-ghost sm" id="clearCacheBtn">清理缓存</button>
+                </div>
+              </section>
+
+              <section class="card">
+                <div class="card-head">
+                  <div>
+                    <h3>系统权限</h3>
+                    <p class="card-sub">锁屏配置需要写入 HKLM 注册表。</p>
+                  </div>
+                  <span class="badge" id="adminBadge">检测中</span>
+                </div>
+                <div class="kv">
+                  <span>运行状态</span>
+                  <strong id="adminState">—</strong>
+                </div>
+                <div class="kv">
+                  <span>锁屏目录</span>
+                  <strong class="mono" id="lockDir">—</strong>
+                </div>
+                <div class="kv">
+                  <span>默认壁纸</span>
+                  <strong class="mono" id="defaultWallpaper">—</strong>
+                </div>
+                <div class="inline-actions">
+                  <button class="btn btn-primary sm" id="elevateBtn2">以管理员身份重启</button>
+                  <button class="btn btn-ghost sm" id="resetWallBtn">恢复默认壁纸</button>
+                  <button class="btn btn-ghost sm" id="resetLockBtn">恢复默认锁屏</button>
+                </div>
+              </section>
+
+              <section class="card card-wide">
+                <div class="card-head">
+                  <div>
+                    <h3>关于</h3>
+                    <p class="card-sub">Wallpaper Studio 2.0 · Rust 重构版本</p>
+                  </div>
+                  <span class="badge badge-accent" id="aboutVersion">v2.0.0</span>
+                </div>
+                <div class="about-grid">
+                  <div><span>界面</span><strong>Tauri 2 + 原生 WebView2</strong></div>
+                  <div><span>图像管线</span><strong>Rust image · Lanczos3</strong></div>
+                  <div><span>系统集成</span><strong>Win32 · 注册表 · LockApp</strong></div>
+                  <div><span>系统版本</span><strong id="osInfo">—</strong></div>
+                </div>
+              </section>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <div class="drop-overlay" id="dropOverlay">
+      <div class="drop-overlay-inner">
+        <svg class="ic"><use href="#i-image" /></svg>
+        <strong>松开鼠标，导入这张图片</strong>
+        <span>将自动渲染为屏幕尺寸</span>
+      </div>
+    </div>
+
+    <div id="modalRoot"></div>
+    <div class="toast-root" id="toastRoot"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
